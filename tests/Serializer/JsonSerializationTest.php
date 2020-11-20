@@ -112,8 +112,8 @@ class JsonSerializationTest extends BaseSerializationTest
             $outputs['author_expression'] = '{"my_first_name":"Ruud","last_name":"Kamphuis","id":123}';
             $outputs['author_expression_context'] = '{"first_name":"Ruud","direction":1,"name":"name"}';
             $outputs['maxdepth_skippabe_object'] = '{"a":{"xxx":"yyy"}}';
-            $outputs['default_skip_when_empty_enabled_object'] = '{}';
-            $outputs['default_skip_when_empty_disabled_object'] = '{"a":{"xxx":"yyy","inner":{"xxx":"yyy"}}}';
+            $outputs['default_skip_when_empty_enabled_object'] = '{"some_non_empty_prop":"test-value"}';
+            $outputs['default_skip_when_empty_disabled_object'] = '{"hash":{},"array":[],"object":{},"some_empty_non_annotated_prop":[],"some_non_empty_prop":"test-value"}';
             $outputs['array_objects_nullable'] = '[]';
             $outputs['type_casting'] = '{"as_string":"8"}';
             $outputs['authors_inline'] = '[{"full_name":"foo"},{"full_name":"bar"}]';
@@ -155,7 +155,7 @@ class JsonSerializationTest extends BaseSerializationTest
      *
      * @dataProvider getSkipEmptyArrayAndHashValues
      */
-    public function testSkipEmptyArrayAndHash1(bool $flagEnabled, string $expectedSerializedValue)
+    public function testSkipEmptyArrayAndHashWillSkipEmpty(bool $flagEnabled, string $expectedSerializedValue)
     {
         $object = new ObjectWithEmptyArrayAndHashNotAnnotated();
 
@@ -455,11 +455,11 @@ class JsonSerializationTest extends BaseSerializationTest
         return [
             'default skip_when_empty disabled' => [
                 false,
-                'expected' => '{"hash":{},"array":[],"object":{}}',
+                'expected' => '{"hash":{},"array":[],"object":{},"some_empty_non_annotated_prop":[],"some_non_empty_prop":"test-value"}',
             ],
             'default skip_when_empty enabled' => [
                 true,
-                'expected' => '{}',
+                'expected' => '{"some_non_empty_prop":"test-value"}',
             ],
         ];
     }
